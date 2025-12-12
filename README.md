@@ -1,4 +1,4 @@
-## **Week5 Translator Extension Project Summary**
+## **Week5 Translator Extension Project**
 
 This document provides an overview of the architecture and implementation strategy for the Week5 Translator Chrome Extension. The goal of this project is to deliver a utility that allows users to quickly translate selected text on any webpage while prioritizing secure API key management and efficient resource utilization via caching.
 
