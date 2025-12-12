@@ -12,17 +12,33 @@
             color: #1a73e8;
             margin-bottom: 20px;
         }
+        label, input, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #status {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
     </style>
 </head>
 <body>
-    <h2>Extension Settings (Options)</h2>
-    <p>This is where future settings will be stored, such as:</p>
-    <ul>
-        <li>Translation API Key (for the stretch goal)</li>
-        <li>Target Language selection</li>
-        <li>Toggle for the display panel</li>
-    </ul>
+    <h2>Extension Settings</h2>
     
-    <p>For now, this page confirms your setup is complete!</p>
+    <label for="api-key">Translation API Key:</label>
+    <input type="text" id="api-key" placeholder="Enter your secret API key here">
+    <button id="save-button">Save Key</button>
+    <div id="status"></div>
+    
+    <p>This key is stored locally in your browser using `chrome.storage.local` and is never hard-coded or transmitted outside of the service worker's translation call.</p>
+    
+    <script src="options.js"></script>
 </body>
 </html>
