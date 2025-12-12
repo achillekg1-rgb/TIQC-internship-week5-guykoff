@@ -1,20 +1,33 @@
-## **Week5 Translator Extension Project Summary**This document provides an overview of the architecture and implementation strategy for the Week5 Translator Chrome Extension. The goal of this project is to deliver a utility that allows users to quickly translate selected text on any webpage while prioritizing secure API key management and efficient resource utilization via caching.
+## **Week5 Translator Extension Project Summary**
 
-### **Project Architecture and Flow**The extension is built using the standard Manifest V3 architecture, where the **Service Worker** manages core logic and resource handling, and the **Content Script** is responsible for user interface integration.
+This document provides an overview of the architecture and implementation strategy for the Week5 Translator Chrome Extension. The goal of this project is to deliver a utility that allows users to quickly translate selected text on any webpage while prioritizing secure API key management and efficient resource utilization via caching.
 
-* **User Interface (UI) Trigger:** The translation process is initiated when the user selects text and activates the **Context Menu** item registered by the Service Worker.
-* **Service Worker Responsibility (`background.js`):** The Service Worker acts as the exclusive point of contact for external services and persistence. It handles API key retrieval, cache lookup, external service calls, and resource cleanup.
-* **Data Persistence:** All configuration (API Key) and cached translations are stored securely in **`chrome.storage.local`**.
-* **Result Display:** The Service Worker communicates the translation result back to the host page via messaging, where the **Content Script** (`content.js`) injects and updates the non-blocking display panel.
+### **Project Architecture and Flow**
 
-### **Data Management and Resource Strategy**Effective resource control is maintained through strict API key security and a robust caching mechanism.
+The extension is built using the standard Manifest V3 architecture, where the **Service Worker** manages core logic and resource handling, and the **Content Script** is responsible for user interface integration.
 
-#### **1. Secure API Key Handling**The implementation adheres to the principle of never hard-coding sensitive information directly into the source code.
+* **User Interface (UI) Trigger:**
+* The translation process is initiated when the user selects text and activates the **Context Menu** item registered by the Service Worker.
+* **Service Worker Responsibility (`background.js`):**
+* The Service Worker acts as the exclusive point of contact for external services and persistence. It handles API key retrieval, cache lookup, external service calls, and resource cleanup.
+* **Data Persistence:**
+* All configuration (API Key) and cached translations are stored securely in **`chrome.storage.local`**.
+* **Result Display:** 
+The Service Worker communicates the translation result back to the host page via messaging, where the **Content Script** (`content.js`) injects and updates the non-blocking display panel.
 
-* **Input and Storage:** The API key is acquired solely through the **Options Page** interface. The accompanying script (`options.js`) handles saving this key directly into the secure, local storage provided by the browser (`chrome.storage.local`).
-* **Access Control:** The key is retrieved from storage *only* within the Service Worker (`background.js`) at the moment a translation is requested. This containment ensures the key is never exposed to the web page's environment (the Content Script) or committed to the public repository.
+### **Data Management and Resource Strategy**
+Effective resource control is maintained through strict API key security and a robust caching mechanism.
 
-#### **2. Caching and Resource Quotas**The strategy utilizes `chrome.storage.local` to conserve external API quota usage and improve performance.
+#### **1. Secure API Key Handling**
+The implementation adheres to the principle of never hard-coding sensitive information directly into the source code.
+
+* **Input and Storage:**
+The API key is acquired solely through the **Options Page** interface. The accompanying script (`options.js`) handles saving this key directly into the secure, local storage provided by the browser (`chrome.storage.local`).
+* **Access Control:** 
+The key is retrieved from storage *only* within the Service Worker (`background.js`) at the moment a translation is requested. This containment ensures the key is never exposed to the web page's environment (the Content Script) or committed to the public repository.
+
+#### **2. Caching and Resource Quotas**
+The strategy utilizes `chrome.storage.local` to conserve external API quota usage and improve performance.
 
 | Component | Purpose & Mechanism | Resource Management |
 | --- | --- | --- |
@@ -24,4 +37,5 @@
 |  | **Time-To-Live (TTL):** Entries older than 24 hours are removed to ensure data freshness. | Reduces repeated API calls for potentially stale translations. |
 |  | **Size Cap:** A maximum limit of **500 entries** is enforced, with the oldest entries being evicted first (Least Recently Used approach based on timestamp) to stay within storage limits. | Proactively prevents the extension from exceeding its allotted local storage quota. |
 
-### **Next Steps**The current mock implementation serves as a functional proof of concept. The primary future step is to replace the mock `translate` function within `background.js` with a secure `fetch()` call to a chosen Translation Service API. This integration must be carefully monitored to include more advanced quota and rate-limit handling based on the specific API provider's usage guidelines.
+### **Next Steps**
+The current mock implementation serves as a functional proof of concept. The primary future step is to replace the mock `translate` function within `background.js` with a secure `fetch()` call to a chosen Translation Service API. This integration must be carefully monitored to include more advanced quota and rate-limit handling based on the specific API provider's usage guidelines.
